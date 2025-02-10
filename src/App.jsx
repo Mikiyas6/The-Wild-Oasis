@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // staleTime: 60 * 1000,
-      staleTime: 60 * 1000,
+      staleTime: 0,
       /*
 Purpose: The amount of time that the data in the cache will stay fresh or will stay valid until it is fetched again by React Query
 
@@ -35,7 +35,7 @@ Example Behavior:
 - If you fetch data and revisit the component within 1 minute, it won’t trigger a new request.
 - After 1 minute, if the same query is used again, React Query will automatically refetch the data.
 
-- Moral of the story is, Data will be fetched and stay the same that way for the amount of time we specified in the stale property even if the data is modified in the database. Since the cache is only updated after the time we specified, components who subscribed to the data will reflect the stale data till that time ends. No reload or moving to another tab or component will help.
+- Moral of the story is, Data will only be re-fetched if a the stale time is passed or a manual reload happens. Data will be fetched and stay the same that way for the amount of time we specified in the stale property even if the data is modified in the database. Since the cache is only updated after the time we specified has been passed or a reload happens, components who subscribed to the data will reflect the stale data till that time ends or the manual reload happens. No moving to another tab or component will help. But a reload does.
       */
     },
   },
