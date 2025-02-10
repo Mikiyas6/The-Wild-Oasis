@@ -39,6 +39,7 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+<<<<<<< HEAD
 function CabinRow({ cabin }) {
   const { name, maxCapacity, regularPrice, discount, image } = cabin;
   return (
@@ -49,6 +50,18 @@ function CabinRow({ cabin }) {
       <Price>{formatCurrency(regularPrice)}</Price>
       <Discount>{formatCurrency(discount)}</Discount>
       <button>Delete</button>
+=======
+
+function CabinRow({ cabin }) {
+  const { name, maxCapacity, regularPrice, discount, image } = cabin;
+  return (
+    <TableRow role="row">
+      <img src={image} alt="A picture" />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} guests</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      <Price>{formatCurrency(regularPrice)}</Price>
+>>>>>>> 5035407718b514f86506a147577f2145f9705cfb
     </TableRow>
   );
 }

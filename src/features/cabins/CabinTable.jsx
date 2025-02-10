@@ -1,23 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { getCabins } from "../../services/apiCabins";
+<<<<<<< HEAD
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
+=======
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../../ui/Spinner";
+import CabinRow from "./CabinRow";
+
+>>>>>>> 5035407718b514f86506a147577f2145f9705cfb
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
   overflow: hidden;
 `;
-
 const TableHeader = styled.header`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
   column-gap: 2.4rem;
   align-items: center;
-
   background-color: var(--color-grey-50);
   border-bottom: 1px solid var(--color-grey-100);
   text-transform: uppercase;
@@ -26,6 +30,7 @@ const TableHeader = styled.header`
   color: var(--color-grey-600);
   padding: 1.6rem 2.4rem;
 `;
+<<<<<<< HEAD
 function CabinTable() {
   /*
 useQuery is a React hook used inside components that:
@@ -39,12 +44,18 @@ How It Works
 - If cached and fresh, it doesn’t fetch (returns cached data instantly).
 - If stale or data is not there, it fetches new data using the provided function.
   */
+=======
+
+function CabinTable() {
+  //The useQuery hook from React Query is used to fetch and manage data asynchronously.
+>>>>>>> 5035407718b514f86506a147577f2145f9705cfb
   const {
     isLoading,
     data: cabins,
     error,
   } = useQuery({
     /* 
+<<<<<<< HEAD
   - uniquely Identifies the data that we're going to query
   - "cabin" indicates that this query fetches cabin data.
   - React Query uses it to cache and manage data associated with this key.
@@ -78,6 +89,17 @@ The `useQuery` hook returns several values, but the most important ones are:
  6️⃣ `refetch` – Manually trigger a refetch 🔄  
 - If you want to fetch fresh data on demand, call `refetch()`.  
 */
+=======
+    - uniquely Identifies the data that we're going to query
+    - "cabin" indicates that this query fetches cabin data.
+    - React Query uses it to cache and manage data associated with this key.
+    - If a query with the same queryKey exists in the cache and is still valid (not stale), React Query will use the cached data instead of refetching.
+    - If the data is stale or doesn’t exist in the cache, React Query triggers queryFn to fetch fresh data.
+    */
+    queryKey: ["cabin"],
+    queryFn: getCabins, // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
+  });
+>>>>>>> 5035407718b514f86506a147577f2145f9705cfb
   if (isLoading) return <Spinner />;
   return (
     <Table role="table">
