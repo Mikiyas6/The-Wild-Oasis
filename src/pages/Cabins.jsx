@@ -7,11 +7,7 @@ function Cabins() {
     <>
       <Row type="horizontal">
         <Heading as="h1">All cabins</Heading>
-<<<<<<< HEAD
         <p>Filter / Sort</p>
-=======
-        <p>Filter/Sort</p>
->>>>>>> 5035407718b514f86506a147577f2145f9705cfb
       </Row>
       <Row>
         <CabinTable />
