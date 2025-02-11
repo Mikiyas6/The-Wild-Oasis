@@ -5,6 +5,7 @@ import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
+import { useForm } from "react-hook-form";
 
 const FormRow = styled.div`
   display: grid;
@@ -43,31 +44,61 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
+  // useForm is a React Hook Form function that manages form state.
+  //It returns an object with methods like register, handleSubmit, and errors.
+  const { register, handleSubmit } = useForm();
+  {
+    /* register is a function that registers input fields to the form state */
+  }
+  {
+    /* handleSubmit is a function that handles form submission and validation 
+  
+    */
+  }
+  function onSubmit(data) {
+    console.log(data);
+  }
   return (
-    <Form>
+    /* 
+- When the form is submitted, handleSubmit first gathers all form data and validates them
+- If the validation passes(If the form is valid), it calls the onSubmit function with the form data.
+- If validation fails, it prevents form submission and manages errors.
+    */
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" />
+
+        <Input type="text" id="name" {...register("name")} />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" />
+        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" />
+        <Input type="number" id="regularPrice" {...register("regularPrice")} />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="discount">Discount</Label>
-        <Input type="number" id="discount" defaultValue={0} />
+        <Input
+          type="number"
+          id="discount"
+          defaultValue={0}
+          {...register("discount")}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="description">Description for website</Label>
-        <Textarea type="number" id="description" defaultValue="" />
+        <Textarea
+          type="number"
+          id="description"
+          defaultValue=""
+          {...register("description")}
+        />
       </FormRow>
 
       <FormRow>
