@@ -77,7 +77,7 @@ function CreateCabinForm() {
   const { errors } = formState;
 
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   }
   function onError(errors) {}
   return (
@@ -188,7 +188,12 @@ It defines a function that receives the current input value (value) and returns:
 
       <FormRow>
         <label htmlFor="image">Cabin photo</label>
-        <FileInput disabled={isCreating} id="image" accept="image/*" />
+        <FileInput
+          disabled={isCreating}
+          id="image"
+          accept="image/*"
+          {...register("image", { required: "This field is required" })}
+        />
         {errors?.image?.message && <Error>{errors.image.message}</Error>}
       </FormRow>
 
