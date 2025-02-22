@@ -9,7 +9,7 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 
 import { useForm } from "react-hook-form";
-import { createEditCabin } from "../../services/apiCabins";
+import { createCabin } from "../../services/apiCabins";
 
 function CreateCabinForm({ cabinToEdit = {} }) {
   const FormRow = styled.div`
@@ -48,11 +48,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     color: var(--color-red-700);
   `;
 
-  const { id: editId, ...editValues } = cabinToEdit;
-  const isEditSession = Boolean(editId);
   const queryClient = useQueryClient();
   const { isLoading: isCreating, mutate } = useMutation({
-    mutationFn: createEditCabin,
+    mutationFn: createCabin,
     onSuccess: () => {
       toast.success("Cabin created successfully!");
       queryClient.invalidateQueries({
@@ -71,9 +69,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   - getValues	Retrieves the current values of the form fields.
 - formState	Holds the form state, including validation errors.
   */
-  const { register, handleSubmit, reset, getValues, formState } = useForm({
-    defaultValues: isEditSession ? editValues : {},
-  });
+  const { register, handleSubmit, reset, getValues, formState } = useForm();
   /**
    errors = {
   name: { message: "This field is required" },
@@ -97,6 +93,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="name">Cabin name</label>
         <Input
+          defaultValue={cabinToEdit?.name}
           disabled={isCreating}
           type="text"
           id="name"
@@ -125,6 +122,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="maxCapacity">Maximum capacity</label>
         <Input
+          DefaultValue={cabinToEdit?.maxCapacity}
           disabled={isCreating}
           type="number"
           id="maxCapacity"
@@ -144,6 +142,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="regularPrice">Regular price</label>
         <Input
+          DefaultValue={cabinToEdit?.regularPrice}
           disabled={isCreating}
           type="number"
           id="regularPrice"
@@ -157,9 +156,11 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="discount">Discount</label>
         <Input
+          DefaultValue={cabinToEdit?.discount}
           disabled={isCreating}
           type="number"
           id="discount"
+          defaultValue={0}
           {...register("discount", {
             required: "This field is required",
             /**
@@ -183,6 +184,7 @@ It defines a function that receives the current input value (value) and returns:
           disabled={isCreating}
           type="number"
           id="description"
+          defaultValue=""
           {...register("description", { required: "This field is required" })}
         />
         {errors?.description?.message && (
@@ -193,12 +195,11 @@ It defines a function that receives the current input value (value) and returns:
       <FormRow>
         <label htmlFor="image">Cabin photo</label>
         <FileInput
+          DefaultValue={cabinToEdit?.image}
           disabled={isCreating}
           id="image"
           accept="image/*"
-          {...register("image", {
-            required: isEditSession ? false : "This field is required",
-          })}
+          {...register("image", { required: "This field is required" })}
         />
         {errors?.image?.message && <Error>{errors.image.message}</Error>}
       </FormRow>
@@ -208,9 +209,7 @@ It defines a function that receives the current input value (value) and returns:
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>
-          {isEditSession ? "Edit cabin" : "Add cabin"}
-        </Button>
+        <Button disabled={isCreating}>Edit cabin</Button>
         {errors?.secondary?.message && (
           <Error>{errors.secondary.message}</Error>
         )}
