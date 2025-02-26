@@ -10,48 +10,46 @@ import Textarea from "../../ui/Textarea";
 
 import { useForm } from "react-hook-form";
 import { createEditCabin } from "../../services/apiCabins";
+const FormRow = styled.div`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 24rem 1fr 1.2fr;
+  gap: 2.4rem;
 
+  padding: 1.2rem 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-grey-100);
+  }
+
+  &:has(button) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+  }
+`;
+
+const Label = styled.label`
+  font-weight: 500;
+`;
+
+const Error = styled.span`
+  font-size: 1.4rem;
+  color: var(--color-red-700);
+`;
 function CreateCabinForm({ cabinToEdit = {} }) {
-  const FormRow = styled.div`
-    display: grid;
-    align-items: center;
-    grid-template-columns: 24rem 1fr 1.2fr;
-    gap: 2.4rem;
-
-    padding: 1.2rem 0;
-
-    &:first-child {
-      padding-top: 0;
-    }
-
-    &:last-child {
-      padding-bottom: 0;
-    }
-
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--color-grey-100);
-    }
-
-    &:has(button) {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1.2rem;
-    }
-  `;
-
-  const Label = styled.label`
-    font-weight: 500;
-  `;
-
-  const Error = styled.span`
-    font-size: 1.4rem;
-    color: var(--color-red-700);
-  `;
-
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
   const queryClient = useQueryClient();
-  const { isLoading: isCreating, mutate } = useMutation({
+  const { isLoading: isCreating, mutate: createCabin } = useMutation({
     mutationFn: createEditCabin,
     onSuccess: () => {
       toast.success("Cabin created successfully!");
@@ -64,7 +62,19 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       toast.error("Failed to create cabin: " + error.message);
     },
   });
-
+  const { isLoading: isEditing, mutate: editCabin } = useMutation({
+    mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
+    onSuccess: () => {
+      toast.success("Cabin successfully Edited!");
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"],
+      });
+      reset();
+    },
+    onError: (error) => {
+      toast.error("Failed to create cabin: " + error.message);
+    },
+  });
   /*
   - useForm is a React Hook Form function provides various utilities for managing form state and validation.
   - It returns an object with methods like register, handleSubmit, and errors.
@@ -81,9 +91,14 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 };
    */
   const { errors } = formState;
-
+  const isWorking = isCreating || isEditing;
+  /*************  ✨ Codeium Command ⭐  *************/
+  /******  030a5bae-8858-41c0-85ac-52b8dacb1ed9  *******/
   function onSubmit(data) {
-    mutate({ ...data, image: data.image[0] });
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+    if (isEditSession)
+      editCabin({ newCabinData: { ...data, image }, id: editId });
+    else createCabin({ ...data, image: image });
   }
   function onError(errors) {}
   return (
@@ -97,7 +112,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="name">Cabin name</label>
         <Input
-          disabled={isCreating}
+          disabled={isWorking}
           type="text"
           id="name"
           /* 
@@ -125,7 +140,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="maxCapacity">Maximum capacity</label>
         <Input
-          disabled={isCreating}
+          disabled={isWorking}
           type="number"
           id="maxCapacity"
           {...register("maxCapacity", {
@@ -144,7 +159,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="regularPrice">Regular price</label>
         <Input
-          disabled={isCreating}
+          disabled={isWorking}
           type="number"
           id="regularPrice"
           {...register("regularPrice", { required: "This field is required" })}
@@ -157,7 +172,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         <label htmlFor="discount">Discount</label>
         <Input
-          disabled={isCreating}
+          disabled={isWorking}
           type="number"
           id="discount"
           {...register("discount", {
@@ -180,7 +195,7 @@ It defines a function that receives the current input value (value) and returns:
       <FormRow>
         <label htmlFor="description">Description for website</label>
         <Textarea
-          disabled={isCreating}
+          disabled={isWorking}
           type="number"
           id="description"
           {...register("description", { required: "This field is required" })}
@@ -193,7 +208,7 @@ It defines a function that receives the current input value (value) and returns:
       <FormRow>
         <label htmlFor="image">Cabin photo</label>
         <FileInput
-          disabled={isCreating}
+          disabled={isWorking}
           id="image"
           accept="image/*"
           {...register("image", {
@@ -208,7 +223,7 @@ It defines a function that receives the current input value (value) and returns:
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>
+        <Button disabled={isWorking}>
           {isEditSession ? "Edit cabin" : "Add cabin"}
         </Button>
         {errors?.secondary?.message && (
