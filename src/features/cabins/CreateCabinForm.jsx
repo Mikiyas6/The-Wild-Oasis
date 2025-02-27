@@ -1,6 +1,3 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-
 import styled from "styled-components";
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
@@ -9,7 +6,8 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 
 import { useForm } from "react-hook-form";
-import { createEditCabin } from "../../services/apiCabins";
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditCabin } from "./useEditCabin";
 const FormRow = styled.div`
   display: grid;
   align-items: center;
@@ -48,33 +46,9 @@ const Error = styled.span`
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
-  const queryClient = useQueryClient();
-  const { isLoading: isCreating, mutate: createCabin } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success("Cabin created successfully!");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (error) => {
-      toast.error("Failed to create cabin: " + error.message);
-    },
-  });
-  const { isLoading: isEditing, mutate: editCabin } = useMutation({
-    mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
-    onSuccess: () => {
-      toast.success("Cabin successfully Edited!");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (error) => {
-      toast.error("Failed to create cabin: " + error.message);
-    },
-  });
+  const { isEditing, editCabin } = useEditCabin();
+  const { isCreating, createCabin } = useCreateCabin();
+  const isWorking = isCreating || isEditing;
   /*
   - useForm is a React Hook Form function provides various utilities for managing form state and validation.
   - It returns an object with methods like register, handleSubmit, and errors.
@@ -91,14 +65,17 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 };
    */
   const { errors } = formState;
-  const isWorking = isCreating || isEditing;
   /*************  ✨ Codeium Command ⭐  *************/
   /******  030a5bae-8858-41c0-85ac-52b8dacb1ed9  *******/
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
     if (isEditSession)
-      editCabin({ newCabinData: { ...data, image }, id: editId });
-    else createCabin({ ...data, image: image });
+      editCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        { onSuccess: (data) => reset() }
+      );
+    else
+      createCabin({ ...data, image: image }, { onSuccess: (data) => reset() });
   }
   function onError(errors) {}
   return (
@@ -195,7 +172,6 @@ It defines a function that receives the current input value (value) and returns:
       <FormRow>
         <label htmlFor="description">Description for website</label>
         <Textarea
-          disabled={isWorking}
           type="number"
           id="description"
           {...register("description", { required: "This field is required" })}
