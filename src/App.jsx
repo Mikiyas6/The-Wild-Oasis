@@ -14,10 +14,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 
 /*
-- It sets up the cache and manages all the queries in the application.
-- It is responsible for delegation of fetching to the useQuery, caching, synchronizing, and updating data in a declarative way.
+- QueryClient is a data-management system for the entire application.
+- It is responsible for:
+  - Setting up the cache
+  - Stores fetched data in the cache
+  - Controls when to refetch the data by setting the staleTime property
 - It is typically passed to a QueryClientProvider to be used throughout your React app.
-- We're basically creating a place where all the data will live like a global store for all the queries and then later, we're going to provide it to the entire application
+  - We're basically creating a place where all the data will live like a global store for all the queries and then later, we're going to provide it to the entire application
  */
 const queryClient = new QueryClient({
   // Allows you to configure the default behavior of queries in React Query.
@@ -28,9 +31,11 @@ const queryClient = new QueryClient({
       /*
 Purpose: The amount of time that the data in the cache will stay fresh or will stay valid until it is fetched again by React Query
 
-Fresh Data: Data is not re-fetched if a new component subscribes to the same query.
+Fresh Data: is the data that is currently in the cache and is still valid.
 
-Stale Data: After 60,000ms (1 minute), the data is considered stale, and if a component mounts or a query is triggered, it will refetch.
+Stale Data: is the data that is not valid anymore.
+
+After 60,000ms (1 minute), the data is considered stale, and if a component mounts that needs that data, or a query is triggered, it will refetch.
 
 Example Behavior:
 - If you fetch data and revisit the component within 1 minute, it won’t trigger a new request.
@@ -97,6 +102,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
+      {/* BrowserRouter is a component that allows you to manage the routing of your application. It is a wrapper that allows you to manage the routing of your application. */}
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
@@ -114,7 +120,7 @@ function App() {
       </BrowserRouter>
       <Toaster
         position="top-center"
-        gutter={12} // The space between the window and the Toaster
+        gutter={12} // The space between multiple toasts
         containerStyle={{ margin: "8px" }}
         toastOptions={{
           // How long a success toast stays on the screen

@@ -49,24 +49,34 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   const { isEditing, editCabin } = useEditCabin();
   const { isCreating, createCabin } = useCreateCabin();
   const isWorking = isCreating || isEditing;
-  /*
-  - useForm is a React Hook Form function provides various utilities for managing form state and validation.
-  - It returns an object with methods like register, handleSubmit, and errors.
-  - getValues	Retrieves the current values of the form fields.
-- formState	Holds the form state, including validation errors.
-  */
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
+    // FOREXAMPLE:
+    //  If editing, name field will be pre-filled with editValues.name
+    // If creating, name field will be empty
   });
+  /*
+  - useForm is a React Hook Form function provides various utilities for managing form state, validation and submission.
+ 
+  - register,      // Function to register input fields
+  - handleSubmit,  // Function to handle form submission
+  - reset,         // Function to reset form
+  - getValues,     // Function to get current form values
+  - formState: {   // Holds the form state
+    - errors,      // Validation errors
+    - isDirty,     // Form has been modified
+    - isSubmitting, // Form is being submitted
+    - isValid,     // Form is valid
+  }
+  */
+  const { errors } = formState;
   /**
    errors = {
   name: { message: "This field is required" },
   email: { message: "Invalid email address" },
 };
    */
-  const { errors } = formState;
-  /*************  ✨ Codeium Command ⭐  *************/
-  /******  030a5bae-8858-41c0-85ac-52b8dacb1ed9  *******/
+
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
     if (isEditSession)
@@ -79,26 +89,32 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   }
   function onError(errors) {}
   return (
-    /* 
-  - handleSubmit is a function that handles form submission and validation 
-- When the form is submitted, handleSubmit first gathers all form data and validates them
-- If the validation passes(If the form is valid), it calls the onSubmit function with the form data.
-- If validation fails, it prevents form submission and manages errors by calling the onError function with errors as an object.
-    */
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
+      {/* 
+      - handleSubmit is a function that handles form submission and
+      validation 
+      - When the form is submitted, handleSubmit first gathers all
+      form data and validates them 
+      - If the validation passes(If the form is
+      valid), it calls the onSubmit function with the form data. 
+      - If validation
+      fails, it prevents form submission and manages errors by calling the
+      onError function with errors as an object. 
+      */}
       <FormRow>
         <label htmlFor="name">Cabin name</label>
         <Input
           disabled={isWorking}
           type="text"
           id="name"
+          {...register("name", { required: "This field is required" })}
           /* 
   - register is a function that registers input fields to the form state
   - It is provided by React Hook Form (useForm).
-  - It registers an input field under the key "name".
+  - It registers an input field under a key specified in the first argument.
   - The second argument { required: "This field is required" } adds validation rules.
   - The required property ensures that the field must be filled.
-  - If left empty, the error message "This field is required" is stored in the errors object.
+  - If left empty, the error message "This field is required" is stored in the errors object under the key specified in the first argument .
    - The spread operator (...) spreads the returned object from register() into the input component.
   - It returns an object with event handlers and attributes, similar to:
 {
@@ -109,11 +125,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 }
   - By using {...register(...)}, we pass all these properties to the <input> field automatically
     */
-          {...register("name", { required: "This field is required" })}
         />
         {errors?.name?.message && <Error>{errors.name.message}</Error>}
       </FormRow>
-
       <FormRow>
         <label htmlFor="maxCapacity">Maximum capacity</label>
         <Input
@@ -132,7 +146,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           <Error>{errors.maxCapacity.message}</Error>
         )}
       </FormRow>
-
       <FormRow>
         <label htmlFor="regularPrice">Regular price</label>
         <Input
@@ -145,7 +158,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           <Error>{errors.regularPrice.message}</Error>
         )}
       </FormRow>
-
       <FormRow>
         <label htmlFor="discount">Discount</label>
         <Input
@@ -168,7 +180,6 @@ It defines a function that receives the current input value (value) and returns:
         />
         {errors?.discount?.message && <Error>{errors.discount.message}</Error>}
       </FormRow>
-
       <FormRow>
         <label htmlFor="description">Description for website</label>
         <Textarea
@@ -180,7 +191,6 @@ It defines a function that receives the current input value (value) and returns:
           <Error>{errors.description.message}</Error>
         )}
       </FormRow>
-
       <FormRow>
         <label htmlFor="image">Cabin photo</label>
         <FileInput
@@ -193,7 +203,6 @@ It defines a function that receives the current input value (value) and returns:
         />
         {errors?.image?.message && <Error>{errors.image.message}</Error>}
       </FormRow>
-
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button variation="secondary" type="reset">
