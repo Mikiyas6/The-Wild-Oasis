@@ -8,6 +8,7 @@ import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
+import { useContext } from "react";
 const FormRow = styled.div`
   display: grid;
   align-items: center;
@@ -85,7 +86,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         {
           onSuccess: (data) => {
             reset();
-            onCloseModal?.();
+            onCloseModal();
           },
         }
       );
