@@ -2,6 +2,7 @@ import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -52,8 +53,10 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+// 1. Create a context
 const ModalContext = createContext();
 
+// 2. Create a the parent component that will contain all the state needed for the children
 function Modal({ children }) {
   const [openName, setOpenName] = useState("");
   const close = () => setOpenName("");
@@ -65,18 +68,24 @@ function Modal({ children }) {
     <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
   );
 }
-function Open({ children, opens }) {
+
+// 3. Create Child components
+
+// 3.1. Create a child component that will be used to open the modal
+function Open({ children, opens: opensWindowName }) {
   const { open } = useContext(ModalContext);
-  return cloneElement(children, { onClick: () => open(opens) });
+  return cloneElement(children, { onClick: () => open(opensWindowName) });
 }
 
+// 3.2. Create a child component that will be used to close the modal
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
-
+  const { ref } = useOutsideClick({ close });
   if (name !== openName) return null;
+
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
