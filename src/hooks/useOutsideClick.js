@@ -1,36 +1,26 @@
+// src/hooks/useOutsideClick.js
 import { useEffect, useRef } from "react";
 
-export function useOutsideClick({ close }) {
+export function useOutsideClick(handler, listenCapturing = true) {
   const ref = useRef();
+
   useEffect(
     function () {
       function handleClick(e) {
-        // Early return if modal isn't open
-        if (!ref.current) return;
-
-        // Handle ESC key
-        if (e.key === "Escape") {
-          close();
-          return;
-        }
-
-        // Handle outside clicks
-        if (e.type === "mousedown" && !ref.current.contains(e.target)) {
-          close();
+        // Add check to ensure handler exists
+        if (ref.current && !ref.current.contains(e.target) && handler) {
+          handler();
         }
       }
 
-      // Listen for both clicks and keyboard events
-      document.addEventListener("mousedown", handleClick);
-      document.addEventListener("keydown", handleClick);
+      // Use mousedown instead of click for better UX
+      document.addEventListener("mousedown", handleClick, listenCapturing);
 
-      return () => {
-        document.removeEventListener("mousedown", handleClick);
-        document.removeEventListener("keydown", handleClick);
-      };
+      return () =>
+        document.removeEventListener("mousedown", handleClick, listenCapturing);
     },
-    [close]
+    [handler, listenCapturing]
   );
 
-  return { ref };
+  return ref;
 }

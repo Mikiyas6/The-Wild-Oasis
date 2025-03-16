@@ -78,11 +78,12 @@ function Header({ children }) {
   );
 }
 
-function Body({ children }) {
+function Body({ data, render }) {
   const { columns } = useContext(TableContext);
+  if (!data.length) return <Empty>No data to show at the moment</Empty>;
   return (
     <StyledBody role="row" columns={columns}>
-      {children}
+      {data.map(render)}
     </StyledBody>
   );
 }
