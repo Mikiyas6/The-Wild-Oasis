@@ -85,12 +85,20 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         {
           onSuccess: (data) => {
             reset();
-            onCloseModal();
+            onCloseModal?.();
           },
         }
       );
     else
-      createCabin({ ...data, image: image }, { onSuccess: (data) => reset() });
+      createCabin(
+        { ...data, image: image },
+        {
+          onSuccess: (data) => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
   }
   function onError(errors) {}
   return (
