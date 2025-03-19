@@ -44,15 +44,20 @@ function BookingRow({
     numGuests,
     totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
-  },
+    guests,
+    cabins,
+  } = {},
 }) {
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
     "checked-out": "silver",
   };
+
+  // Safely access nested properties
+  const guestName = guests?.fullName || "Guest not found";
+  const email = guests?.email || "No email";
+  const cabinName = cabins?.name || "Cabin not found";
 
   return (
     <Table.Row>
@@ -76,7 +81,9 @@ function BookingRow({
         </span>
       </Stacked>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      <Tag type={statusToTagName[status]}>
+        {status?.replace("-", " ") || "unknown"}
+      </Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
     </Table.Row>
