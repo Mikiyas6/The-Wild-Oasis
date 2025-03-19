@@ -11,12 +11,12 @@ const StyledFilter = styled.div`
   gap: 0.4rem;
 `;
 
-const FilterButton = styled.button`
+const FilterButton = styled.button.attrs({ type: "button" })`
   background-color: var(--color-grey-0);
   border: none;
 
   ${(props) =>
-    props.active &&
+    props.$active &&
     css`
       background-color: var(--color-brand-600);
       color: var(--color-brand-50);
@@ -25,7 +25,6 @@ const FilterButton = styled.button`
   border-radius: var(--border-radius-sm);
   font-weight: 500;
   font-size: 1.4rem;
-  /* To give the same height as select */
   padding: 0.44rem 0.8rem;
   transition: all 0.3s;
 
@@ -34,22 +33,25 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
 function Filter({ filterField, options }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentFilter = searchParams.get(filterField) || options[0].value;
+
   function handleClick(value) {
     setSearchParams((prev) => {
       prev.set(filterField, value);
       return prev;
     });
   }
+
   return (
     <StyledFilter>
       {options.map((option) => (
         <FilterButton
           key={option.value}
           onClick={() => handleClick(option.value)}
-          active={option.value === currentFilter}
+          $active={option.value === currentFilter}
           disabled={option.value === currentFilter}
         >
           {option.label}
