@@ -3,6 +3,7 @@ import Row from "../ui/Row";
 import CabinTable from "../features/cabins/CabinTable";
 import AddCabin from "../features/cabins/AddCabin";
 import CabinTableOperations from "../features/cabins/CabinTableOperations";
+import { HiOutlineUserPlus } from "react-icons/hi2";
 
 function Cabins() {
   return (
@@ -13,7 +14,12 @@ function Cabins() {
       </Row>
       <Row>
         <CabinTable />
-        <AddCabin />
+        <AddCabin>
+          <span>
+            <HiOutlineUserPlus />
+            Add cabin
+          </span>
+        </AddCabin>
       </Row>
     </>
   );
