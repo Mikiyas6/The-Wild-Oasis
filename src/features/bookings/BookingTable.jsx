@@ -4,10 +4,14 @@ import Menus from "../../ui/Menus";
 import { useBookings } from "./useBookings";
 import Empty from "../../ui/Empty";
 import Spinner from "../../ui/Spinner";
+
 function BookingTable() {
-  const { isLoading, bookings } = useBookings();
+  const { isLoading, bookings, error } = useBookings();
+
   if (isLoading) return <Spinner />;
-  if (!bookings.length) return <Empty resourceName="bookings" />;
+  if (error) return <div>Error loading bookings</div>;
+  if (!bookings?.length) return <Empty resourceName="bookings" />;
+
   return (
     <Menus>
       <Table columns="0.6fr 2fr 2.4fr 1.4fr 1fr 3.2rem">

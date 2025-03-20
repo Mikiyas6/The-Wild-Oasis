@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getBookings } from "../../services/apiBookings";
+import { useSearchParams } from "react-router-dom";
 
 export function useBookings() {
   /*
@@ -13,9 +14,16 @@ useQuery is a React hook used inside components that acts as a bridge between ou
 
 How It Works
 - useQuery always asks QueryClient to see if data is already cached.
-- If cached and fresh, it doesn’t fetch (returns cached data instantly).
+- If cached and fresh, it doesn't fetch (returns cached data instantly).
 - If stale or data is not there, it fetches new data using the provided function.
   */
+  const [searchParams] = useSearchParams();
+  // Filter
+  const filterValue = searchParams.get("status") || "all";
+  const filter =
+    !filterValue || filterValue === "all"
+      ? null
+      : { field: "status", value: filterValue, method: "eq" };
 
   const {
     isLoading,
@@ -27,10 +35,10 @@ How It Works
 - "cabins" indicates that this query fetches cabin data.
 - React Query uses it to cache and manage data associated with this key.
 - If a query with the same queryKey exists in the cache and is still valid (not stale), React Query will use the cached data instead of refetching.
-- If the data is stale or doesn’t exist in the cache, React Query triggers queryFn to fetch fresh data.
+- If the data is stale or doesn't exist in the cache, React Query triggers queryFn to fetch fresh data.
 */
-    queryKey: ["bookings"],
-    queryFn: getBookings, // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
+    queryKey: ["bookings", filter],
+    queryFn: () => getBookings(filter), // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
   });
   /*
 The `useQuery` hook returns several values, but the most important ones are:

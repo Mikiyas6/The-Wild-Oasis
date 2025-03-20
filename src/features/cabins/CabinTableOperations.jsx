@@ -1,8 +1,9 @@
 import { HiOutlineUserPlus } from "react-icons/hi2";
 import Filter from "../../ui/Filter";
 import TableOperations from "../../ui/TableOperations";
-import SortyBy from "../../ui/SortyBy";
+
 import AddCabin from "./AddCabin";
+import SortBy from "../../ui/SortBy";
 function CabinTableOperations() {
   return (
     <TableOperations>
@@ -14,7 +15,7 @@ function CabinTableOperations() {
           { value: "with-discount", label: "With discount" },
         ]}
       />
-      <SortyBy
+      <SortBy
         options={[
           { value: "name-asc", label: "Sort by name (A-Z)" },
           { value: "name-desc", label: "Sort by name (Z-A)" },
