@@ -24,6 +24,10 @@ How It Works
     !filterValue || filterValue === "all"
       ? null
       : { field: "status", value: filterValue, method: "eq" };
+  //Sort
+  const sortByRaw = searchParams.get("sortBy") || "startDate-desc";
+  const [field, direction] = sortByRaw.split("-");
+  const sortBy = { field, direction };
 
   const {
     isLoading,
@@ -37,8 +41,8 @@ How It Works
 - If a query with the same queryKey exists in the cache and is still valid (not stale), React Query will use the cached data instead of refetching.
 - If the data is stale or doesn't exist in the cache, React Query triggers queryFn to fetch fresh data.
 */
-    queryKey: ["bookings", filter],
-    queryFn: () => getBookings(filter), // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
+    queryKey: ["bookings", filter, sortBy],
+    queryFn: () => getBookings(filter, sortBy), // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
   });
   /*
 The `useQuery` hook returns several values, but the most important ones are:

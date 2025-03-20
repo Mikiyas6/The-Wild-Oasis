@@ -10,12 +10,10 @@ function SortBy({ options }) {
     setSearchParams(searchParams);
   }
 
+  if (!options?.length) return null;
+
   return (
-    <Select
-      options={options}
-      onChange={handleChange}
-      value={currentSortBy || options[0].value}
-    />
+    <Select options={options} value={currentSortBy} onChange={handleChange} />
   );
 }
 
