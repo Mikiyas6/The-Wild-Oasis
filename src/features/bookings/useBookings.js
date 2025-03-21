@@ -28,10 +28,11 @@ How It Works
   const sortByRaw = searchParams.get("sortBy") || "startDate-desc";
   const [field, direction] = sortByRaw.split("-");
   const sortBy = { field, direction };
-
+  // Pagination
+  const page = Number(searchParams.get("page")) || 1;
   const {
     isLoading,
-    data: bookings,
+    data: { data: bookings, count } = {},
     error,
   } = useQuery({
     /* 
@@ -41,8 +42,8 @@ How It Works
 - If a query with the same queryKey exists in the cache and is still valid (not stale), React Query will use the cached data instead of refetching.
 - If the data is stale or doesn't exist in the cache, React Query triggers queryFn to fetch fresh data.
 */
-    queryKey: ["bookings", filter, sortBy],
-    queryFn: () => getBookings(filter, sortBy), // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
+    queryKey: ["bookings", filter, sortBy, page],
+    queryFn: () => getBookings(filter, sortBy, page), // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
   });
   /*
 The `useQuery` hook returns several values, but the most important ones are:
@@ -70,5 +71,5 @@ The `useQuery` hook returns several values, but the most important ones are:
 
 */
 
-  return { isLoading, bookings, error };
+  return { isLoading, bookings, error, count };
 }
