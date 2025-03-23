@@ -31,7 +31,7 @@ How It Works
 - If a query with the same queryKey exists in the cache and is still valid (not stale), React Query will use the cached data instead of refetching.
 - If the data is stale or doesn’t exist in the cache, React Query triggers queryFn to fetch fresh data.
 */
-    queryKey: ["booking"],
+    queryKey: ["booking", bookingId],
     queryFn: () => getBooking(bookingId), // This is the function that's actually responsible for querying(Fetching) the data from the API. The function needs to be asynchronous or need to return a promise
     retry: false, // If set to false, the query will not automatically retry on error.
   });
