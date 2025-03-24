@@ -45,7 +45,7 @@ function BookingDetail() {
     navigate("/bookings");
   }
   function handleDelete() {
-    deleteBooking(bookingId);
+    deleteBooking(bookingId, { onSettled: () => navigate(-1) });
   }
   return (
     <>

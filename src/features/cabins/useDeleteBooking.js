@@ -15,7 +15,6 @@ export function useDeleteBooking() {
     onSuccess: () => {
       toast.success("Booking successfully deleted!");
       queryClient.invalidateQueries({ active: true });
-      navigate(-1);
     },
     onError: () => {
       toast.error("Failed to delete booking!");
