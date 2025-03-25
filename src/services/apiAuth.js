@@ -11,3 +11,15 @@ export async function loginApi({ email, password }) {
   }
   return data;
 }
+
+export async function getCurrentUser() {
+  // Get the current user from the session from the server
+  const { data: session } = await supabase.auth.getSession();
+  console.log(session);
+  if (!session.session) {
+    return null;
+  }
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw new Error(error.message);
+  return data?.user;
+}

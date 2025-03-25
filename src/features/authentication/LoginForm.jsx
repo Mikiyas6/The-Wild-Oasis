@@ -17,7 +17,15 @@ function LoginForm() {
     if (!email || !password) {
       return null;
     }
-    login({ email, password });
+    login(
+      { email, password },
+      {
+        onSettled: () => {
+          setEmail("");
+          setPassword("");
+        },
+      }
+    );
   }
 
   // if (isAuthenticating) {
