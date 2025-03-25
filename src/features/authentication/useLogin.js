@@ -10,8 +10,8 @@ export function useLogin() {
     mutationFn: ({ email, password }) => loginApi({ email, password }),
     onSuccess: (user) => {
       toast.success("Login successful");
-      navigate("/", { replace: true });
       queryClient.setQueryData(["user"], user);
+      navigate("/", { replace: true });
     },
     onError: (err) => {
       toast.error("Provided email or password are incorrect");
