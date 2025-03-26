@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Logout from "../features/authentication/Logout";
+import HeaderMenu from "./HeaderMenu";
+import UserAvatar from "../features/authentication/UserAvatar";
 const StyledHeader = styled.header`
   padding: 1.2rem 4.8rem;
   border-bottom: 1px solid var(--color-grey-100);
@@ -8,13 +9,15 @@ const StyledHeader = styled.header`
   min-height: 7.2rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 2.4rem;
+  justify-content: flex-end;
 `;
 
 function Header() {
   return (
     <StyledHeader>
-      <Logout />
+      <HeaderMenu />
+      <UserAvatar />
     </StyledHeader>
   );
 }
