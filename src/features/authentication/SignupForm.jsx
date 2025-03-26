@@ -3,15 +3,26 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
-
+import { useSignup } from "./useSignup";
+import Spinner from "../../ui/Spinner";
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { register, handleSubmit, formState, getValues } = useForm();
+  const { register, handleSubmit, formState, getValues, reset } = useForm();
+  const { signUp, isSigningup } = useSignup();
   const { errors } = formState;
   function onSubmit(data) {
-    console.log(data);
+    const { fullName, email, password } = data;
+    signUp(
+      { fullName, email, password },
+      {
+        onSettled: () => {
+          reset();
+        },
+      }
+    );
   }
+  if (isSigningup) return <Spinner />;
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       {/* The handleSubmit function will call the function passed as an argument with the form data as an argument */}
@@ -20,6 +31,7 @@ function SignupForm() {
           type="text"
           id="fullName"
           {...register("fullName", { required: "This field is required" })}
+          disabled={isSigningup}
         />
       </FormRow>
 
@@ -35,6 +47,7 @@ function SignupForm() {
               message: "Invalid email address",
             },
           })}
+          disabled={isSigningup}
         />
       </FormRow>
 
@@ -52,6 +65,7 @@ function SignupForm() {
               message: "Password needs a minimum of 8 characters",
             },
           })}
+          disabled={isSigningup}
         />
       </FormRow>
 
@@ -64,15 +78,16 @@ function SignupForm() {
             validate: (value) =>
               value === getValues().password || "Passwords need to match",
           })}
+          disabled={isSigningup}
         />
       </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button disabled={isSigningup} variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button>Create new user</Button>
+        <Button disabled={isSigningup}>Create new user</Button>
       </FormRow>
     </Form>
   );
