@@ -6,20 +6,22 @@ import {
 } from "react-icons/hi2";
 import Stat from "./Stat";
 import { formatCurrency } from "../../utils/helpers";
+
 function Stats({ bookings, confirmedStays, numDays, cabinCount }) {
-  //1. Number of Bookings
+  // 1.
   const numBookings = bookings.length;
-  //2. Total Sales
-  const sales = bookings.reduce(
-    (total, booking) => total + booking.totalPrice,
-    0
-  );
-  //3. Total Check ins
-  const checkins = confirmedStays.length;
-  //4. Occupancy Rate
-  const occupancyRate =
-    confirmedStays.reduce((total, stay) => total + stay.numNights, 0) /
+
+  // 2.
+  const sales = bookings.reduce((acc, cur) => acc + cur.totalPrice, 0);
+
+  // 3.
+  const checkins = confirmedStays?.length || 0;
+
+  // 4.
+  const occupation =
+    confirmedStays?.reduce((acc, cur) => acc + cur.numNights, 0) /
     (numDays * cabinCount);
+  // num checked in nights / all available nights (num days * num cabins)
 
   return (
     <>
@@ -42,10 +44,10 @@ function Stats({ bookings, confirmedStays, numDays, cabinCount }) {
         value={checkins}
       />
       <Stat
-        title="Occupancy Rate"
+        title="Occupancy rate"
         color="yellow"
         icon={<HiOutlineChartBar />}
-        value={Math.round(occupancyRate * 100) + "%"}
+        value={Math.round(occupation * 100) + "%"}
       />
     </>
   );
