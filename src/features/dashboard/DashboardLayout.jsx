@@ -6,3 +6,15 @@ const StyledDashboardLayout = styled.div`
   grid-template-rows: auto 34rem auto;
   gap: 2.4rem;
 `;
+function DashboardLayout() {
+  return (
+    <StyledDashboardLayout>
+      <div>Statistics</div>
+      <div>Todays Activity</div>
+      <div>Chart stay durations</div>
+      <div>Chart Sales</div>
+    </StyledDashboardLayout>
+  );
+}
+
+export default DashboardLayout;
