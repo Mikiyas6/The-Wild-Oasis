@@ -18,6 +18,7 @@ import Modal from "../../ui/Modal";
 import Menus from "../../ui/Menus";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import { useDeleteBooking } from "../cabins/useDeleteBooking";
+import Empty from "../../ui/Empty";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -31,7 +32,7 @@ function BookingDetail() {
   const { isLoading, booking, error } = useBooking();
   const { checkout, isCheckingOut } = useCheckout();
   const { isDeletingBooking, deleteBooking } = useDeleteBooking();
-  if (!booking) return <p>Error: Booking not found</p>;
+  if (!booking) return <Empty resourceName="booking" />;
   const { status, id: bookingId } = booking;
   if (isLoading || isDeletingBooking) return <Spinner />;
 

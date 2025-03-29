@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
     <ErrorBoundary
-      FallbackComponent={<ErrorFallback />}
+      FallbackComponent={ErrorFallback}
       onReset={() => window.location.replace("/")}
     >
       <App />

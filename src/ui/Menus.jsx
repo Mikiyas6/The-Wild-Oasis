@@ -106,7 +106,8 @@ function List({ id, children }) {
 }
 function Button({ id, children, icon, onClick }) {
   const { close } = useContext(MenusContext);
-  function handleClick() {
+  function handleClick(e) {
+    e.stopPropagation();
     onClick?.();
     close();
   }
