@@ -7,6 +7,7 @@ import { subtractDates } from "../utils/helpers";
 import { bookings } from "./data-bookings";
 import { cabins } from "./data-cabins";
 import { guests } from "./data-guests";
+import Heading from "../ui/Heading";
 
 // const originalSettings = {
 //   minBookingLength: 3,
@@ -142,7 +143,7 @@ function Uploader() {
         gap: "8px",
       }}
     >
-      <h3>SAMPLE DATA</h3>
+      <h3 style={{ color: "var(--color-brand-500)" }}>SAMPLE DATA</h3>
 
       <Button onClick={uploadAll} disabled={isLoading}>
         Upload ALL
