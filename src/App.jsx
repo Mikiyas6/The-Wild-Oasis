@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/Dashboard";
@@ -108,7 +108,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyles />
         {/* BrowserRouter is a component that allows you to manage the routing of your application. It is a wrapper that allows you to manage the routing of your application. */}
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route
               element={
@@ -130,7 +130,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
         <Toaster
           position="top-center"
           gutter={12} // The space between multiple toasts
